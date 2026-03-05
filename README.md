@@ -36,7 +36,7 @@ azd env set AZURE_LOCATION "eastus"
 azd env set AZURE_APP_NAME "my-agent-chat"
 azd up
 
-# Option 2: Deploy Day 1 managed container
+# Option 2: Deploy Day 1 app
 ./deploy-day1.sh \
   --resource-group my-rg \
   --app-name my-agent-chat \

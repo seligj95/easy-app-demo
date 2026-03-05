@@ -2,7 +2,7 @@
 
 ## Architecture
 
-This is a **Next.js App Router** full-stack application deployed to **Azure App Service** as a Linux container. It serves as the frontend for an **Azure AI Foundry Prompt Agent**.
+This is a **Next.js App Router** full-stack application deployed to **Azure App Service** via source code zip deploy. It serves as the frontend for an **Azure AI Foundry Prompt Agent**.
 
 - **Frontend:** React components in `src/components/`. Styled with Tailwind CSS.
 - **Backend API:** Next.js API routes in `src/app/api/`. Proxies requests to the Foundry Agent.
