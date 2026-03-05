@@ -57,21 +57,39 @@ if [[ -z "$SKU" ]]; then
       SKU="B1"
       echo ""
       echo "→ Setting up a dev environment (Basic B1)"
+      echo "  Authentication: None (publicly accessible)"
       ;;
     2)
       SKU="S1"
       echo ""
       echo "→ Setting up for your team (Standard S1)"
       if [[ -z "$ENTRA_CLIENT_ID" ]]; then
+        echo "  Authentication: Microsoft Entra ID (auto-configured)"
         echo ""
-        echo "  Tip: For internal team use, we recommend securing the app with"
-        echo "  Microsoft Entra ID. Re-run with --entra-client-id to enable."
+        echo "  Creating Entra App Registration for secure login..."
+        ENTRA_CLIENT_ID=$(az ad app create \
+          --display-name "${APP_NAME}-auth" \
+          --web-redirect-uris "https://${APP_NAME}.azurewebsites.net/.auth/login/aad/callback" \
+          --query appId -o tsv)
+        echo "  ✓ App Registration created (Client ID: ${ENTRA_CLIENT_ID})"
+        echo "  Only users in your organization will be able to access the app."
       fi
       ;;
     3)
       SKU="P1v3"
       echo ""
       echo "→ Setting up for production (Premium P1v3 with auto-scaling)"
+      if [[ -z "$ENTRA_CLIENT_ID" ]]; then
+        echo "  Authentication: Microsoft Entra ID (auto-configured)"
+        echo ""
+        echo "  Creating Entra App Registration for secure login..."
+        ENTRA_CLIENT_ID=$(az ad app create \
+          --display-name "${APP_NAME}-auth" \
+          --web-redirect-uris "https://${APP_NAME}.azurewebsites.net/.auth/login/aad/callback" \
+          --query appId -o tsv)
+        echo "  ✓ App Registration created (Client ID: ${ENTRA_CLIENT_ID})"
+        echo "  Only users in your organization will be able to access the app."
+      fi
       ;;
     *)
       echo "Invalid choice. Defaulting to dev environment (B1)."
@@ -82,12 +100,17 @@ fi
 
 echo ""
 echo "=== Deploying Agent Chat UI ==="
-echo "  Resource Group: $RESOURCE_GROUP"
-echo "  App Name:       $APP_NAME"
-echo "  Location:       $LOCATION"
-echo "  Plan:           $SKU"
-echo "  Agent:          $AGENT_NAME"
-echo "  Foundry:        $FOUNDRY_ENDPOINT"
+echo "  Resource Group:    $RESOURCE_GROUP"
+echo "  App Name:          $APP_NAME"
+echo "  Location:          $LOCATION"
+echo "  Plan:              $SKU"
+echo "  Agent:             $AGENT_NAME"
+echo "  Foundry:           $FOUNDRY_ENDPOINT"
+if [[ -n "$ENTRA_CLIENT_ID" ]]; then
+  echo "  Authentication:    Microsoft Entra ID"
+else
+  echo "  Authentication:    None (public)"
+fi
 echo ""
 
 # Create resource group if it doesn't exist
