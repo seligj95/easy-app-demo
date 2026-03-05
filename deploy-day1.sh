@@ -130,10 +130,10 @@ az deployment group create \
     entraClientId="$ENTRA_CLIENT_ID" \
   --output none
 
-# Step 2: Build the Next.js app
+# Step 2: Build the Next.js app with the eject banner enabled
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 echo "Building the application..."
-(cd "$SCRIPT_DIR" && NEXT_PUBLIC_SHOW_EJECT_BANNER=true npm install --silent && npm run build --silent)
+(cd "$SCRIPT_DIR" && npm install --silent && NEXT_PUBLIC_SHOW_EJECT_BANNER=true npm run build)
 
 # Step 3: Package the standalone output for zip deploy
 echo "Packaging for deployment..."
