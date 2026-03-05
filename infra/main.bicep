@@ -17,7 +17,7 @@ param agentName string
 param skuName string = 'B1'
 
 @description('Docker image for the Day 1 managed UI container')
-param containerImage string = 'ghcr.io/azure-samples/foundry-agent-ui:latest'
+param containerImage string = 'ghcr.io/seligj95/foundry-agent-ui:latest'
 
 @description('Microsoft Entra ID Client ID for Easy Auth (leave empty to skip Easy Auth)')
 param entraClientId string = ''

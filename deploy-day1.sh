@@ -12,14 +12,13 @@
 #     --app-name <app-name> \
 #     --foundry-endpoint <endpoint-url> \
 #     --agent-name <agent-name> \
-#     [--sku B1|S1|P1v3] \
 #     [--entra-client-id <client-id>] \
 #     [--location <azure-region>]
 
 set -euo pipefail
 
 # Defaults
-SKU="B1"
+SKU=""
 ENTRA_CLIENT_ID=""
 LOCATION="eastus2"
 
@@ -30,7 +29,6 @@ while [[ $# -gt 0 ]]; do
     --app-name) APP_NAME="$2"; shift 2 ;;
     --foundry-endpoint) FOUNDRY_ENDPOINT="$2"; shift 2 ;;
     --agent-name) AGENT_NAME="$2"; shift 2 ;;
-    --sku) SKU="$2"; shift 2 ;;
     --entra-client-id) ENTRA_CLIENT_ID="$2"; shift 2 ;;
     --location) LOCATION="$2"; shift 2 ;;
     *) echo "Unknown option: $1"; exit 1 ;;
@@ -43,11 +41,51 @@ if [[ -z "${RESOURCE_GROUP:-}" || -z "${APP_NAME:-}" || -z "${FOUNDRY_ENDPOINT:-
   exit 1
 fi
 
-echo "=== Deploying Day 1 Agent Chat UI ==="
+# --- Intent-based SKU selection ---
+if [[ -z "$SKU" ]]; then
+  echo ""
+  echo "Who will use this agent?"
+  echo ""
+  echo "  1) Just me / testing        (Dev environment)"
+  echo "  2) My team / internal use   (Recommended for most teams)"
+  echo "  3) Production / customers   (Auto-scaling, high availability)"
+  echo ""
+  read -rp "Select [1-3]: " AUDIENCE_CHOICE
+
+  case "${AUDIENCE_CHOICE}" in
+    1)
+      SKU="B1"
+      echo ""
+      echo "→ Setting up a dev environment (Basic B1)"
+      ;;
+    2)
+      SKU="S1"
+      echo ""
+      echo "→ Setting up for your team (Standard S1)"
+      if [[ -z "$ENTRA_CLIENT_ID" ]]; then
+        echo ""
+        echo "  Tip: For internal team use, we recommend securing the app with"
+        echo "  Microsoft Entra ID. Re-run with --entra-client-id to enable."
+      fi
+      ;;
+    3)
+      SKU="P1v3"
+      echo ""
+      echo "→ Setting up for production (Premium P1v3 with auto-scaling)"
+      ;;
+    *)
+      echo "Invalid choice. Defaulting to dev environment (B1)."
+      SKU="B1"
+      ;;
+  esac
+fi
+
+echo ""
+echo "=== Deploying Agent Chat UI ==="
 echo "  Resource Group: $RESOURCE_GROUP"
 echo "  App Name:       $APP_NAME"
 echo "  Location:       $LOCATION"
-echo "  SKU:            $SKU"
+echo "  Plan:           $SKU"
 echo "  Agent:          $AGENT_NAME"
 echo "  Foundry:        $FOUNDRY_ENDPOINT"
 echo ""
