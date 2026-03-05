@@ -60,9 +60,9 @@ if [[ -z "$SKU" ]]; then
       echo "  Authentication: None (publicly accessible)"
       ;;
     2)
-      SKU="S1"
+      SKU="P0v3"
       echo ""
-      echo "→ Setting up for your team (Standard S1)"
+      echo "→ Setting up for your team (Premium P0v3)"
       if [[ -z "$ENTRA_CLIENT_ID" ]]; then
         echo "  Authentication: Microsoft Entra ID (auto-configured)"
         echo ""
@@ -76,9 +76,9 @@ if [[ -z "$SKU" ]]; then
       fi
       ;;
     3)
-      SKU="P0v3"
+      SKU="P1v3"
       echo ""
-      echo "→ Setting up for production (Premium P0v3 with auto-scaling)"
+      echo "→ Setting up for production (Premium P1v3 with auto-scaling)"
       if [[ -z "$ENTRA_CLIENT_ID" ]]; then
         echo "  Authentication: Microsoft Entra ID (auto-configured)"
         echo ""
