@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appName": {
+      "value": "${AZURE_APP_NAME}"
+    },
+    "location": {
+      "value": "${AZURE_LOCATION}"
+    },
+    "foundryEndpoint": {
+      "value": "${AZURE_AI_PROJECT_ENDPOINT}"
+    },
+    "agentName": {
+      "value": "${AZURE_AI_AGENT_NAME}"
+    },
+    "skuName": {
+      "value": "${AZURE_APP_SKU=B1}"
+    },
+    "entraClientId": {
+      "value": "${AZURE_ENTRA_CLIENT_ID=}"
+    }
+  }
+}

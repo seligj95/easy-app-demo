@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "azure": {
+      "type": "copilot",
+      "id": "github.copilot.azure"
+    }
+  }
+}

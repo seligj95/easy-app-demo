@@ -1,0 +1,10 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+name: foundry-agent-appservice
+metadata:
+  template: foundry-agent-appservice@0.0.1
+services:
+  web:
+    project: .
+    language: ts
+    host: appservice
+    dist: .next/standalone
