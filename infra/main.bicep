@@ -16,9 +16,6 @@ param agentName string
 @allowed(['B1', 'P0v3', 'P1v3'])
 param skuName string = 'B1'
 
-@description('Docker image for the Day 1 managed UI container')
-param containerImage string = 'ghcr.io/seligj95/foundry-agent-ui:latest'
-
 @description('Microsoft Entra ID Client ID for Easy Auth (leave empty to skip Easy Auth)')
 param entraClientId string = ''
 
@@ -45,8 +42,9 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
   properties: {
     serverFarmId: appServicePlan.id
     siteConfig: {
-      linuxFxVersion: 'DOCKER|${containerImage}'
+      linuxFxVersion: 'NODE|20-lts'
       alwaysOn: skuName != 'B1'
+      appCommandLine: 'node server.js'
       appSettings: [
         {
           name: 'AZURE_AI_PROJECT_ENDPOINT'
@@ -55,14 +53,6 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
         {
           name: 'AZURE_AI_AGENT_NAME'
           value: agentName
-        }
-        {
-          name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
-          value: 'false'
-        }
-        {
-          name: 'WEBSITES_PORT'
-          value: '3000'
         }
         {
           name: 'OPENAI_API_VERSION'

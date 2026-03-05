@@ -116,7 +116,8 @@ echo ""
 # Create resource group if it doesn't exist
 az group create --name "$RESOURCE_GROUP" --location "$LOCATION" --output none 2>/dev/null || true
 
-# Deploy the Bicep template
+# Step 1: Deploy the infrastructure (App Service, Identity, RBAC, Easy Auth)
+echo "Provisioning Azure resources..."
 az deployment group create \
   --resource-group "$RESOURCE_GROUP" \
   --template-file "$(dirname "$0")/infra/main.bicep" \
@@ -127,7 +128,32 @@ az deployment group create \
     agentName="$AGENT_NAME" \
     skuName="$SKU" \
     entraClientId="$ENTRA_CLIENT_ID" \
-  --output json
+  --output none
+
+# Step 2: Build the Next.js app
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+echo "Building the application..."
+(cd "$SCRIPT_DIR" && NEXT_PUBLIC_SHOW_EJECT_BANNER=true npm install --silent && npm run build --silent)
+
+# Step 3: Package the standalone output for zip deploy
+echo "Packaging for deployment..."
+DEPLOY_DIR=$(mktemp -d)
+cp -r "$SCRIPT_DIR/.next/standalone/." "$DEPLOY_DIR/"
+cp -r "$SCRIPT_DIR/.next/static" "$DEPLOY_DIR/.next/static"
+cp -r "$SCRIPT_DIR/public" "$DEPLOY_DIR/public" 2>/dev/null || true
+(cd "$DEPLOY_DIR" && zip -rq deploy.zip .)
+
+# Step 4: Zip deploy to App Service
+echo "Deploying to App Service..."
+az webapp deploy \
+  --resource-group "$RESOURCE_GROUP" \
+  --name "$APP_NAME" \
+  --src-path "$DEPLOY_DIR/deploy.zip" \
+  --type zip \
+  --output none
+
+# Cleanup
+rm -rf "$DEPLOY_DIR"
 
 echo ""
 echo "=== Deployment Complete ==="
