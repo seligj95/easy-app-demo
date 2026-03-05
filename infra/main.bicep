@@ -114,6 +114,18 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   }
 }
 
+// --- Role Assignment: Cognitive Services User (required for Foundry agent data actions) ---
+var cognitiveServicesUserRoleId = 'a97b65f3-24c7-4388-baec-2e87135dc908'
+
+resource cognitiveServicesRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(webApp.id, cognitiveServicesUserRoleId, resourceGroup().id)
+  properties: {
+    principalId: webApp.identity.principalId
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', cognitiveServicesUserRoleId)
+  }
+}
+
 // --- Outputs ---
 output webAppUrl string = 'https://${webApp.properties.defaultHostName}'
 output webAppName string = webApp.name
