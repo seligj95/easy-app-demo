@@ -2,6 +2,10 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
+# Day 1 managed container: show the eject banner by default
+ARG NEXT_PUBLIC_SHOW_EJECT_BANNER=true
+ENV NEXT_PUBLIC_SHOW_EJECT_BANNER=$NEXT_PUBLIC_SHOW_EJECT_BANNER
+
 COPY package.json package-lock.json ./
 RUN npm ci
 

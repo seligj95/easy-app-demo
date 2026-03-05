@@ -68,6 +68,10 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
           name: 'OPENAI_API_VERSION'
           value: '2025-05-01-preview'
         }
+        {
+          name: 'NEXT_PUBLIC_SHOW_EJECT_BANNER'
+          value: 'true'
+        }
       ]
     }
     httpsOnly: true
