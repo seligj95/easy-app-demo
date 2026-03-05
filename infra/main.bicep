@@ -13,7 +13,7 @@ param foundryEndpoint string
 param agentName string
 
 @description('App Service Plan SKU')
-@allowed(['B1', 'S1', 'P1v3'])
+@allowed(['B1', 'S1', 'P0v3'])
 param skuName string = 'B1'
 
 @description('Docker image for the Day 1 managed UI container')

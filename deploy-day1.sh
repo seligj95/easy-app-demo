@@ -76,9 +76,9 @@ if [[ -z "$SKU" ]]; then
       fi
       ;;
     3)
-      SKU="P1v3"
+      SKU="P0v3"
       echo ""
-      echo "→ Setting up for production (Premium P1v3 with auto-scaling)"
+      echo "→ Setting up for production (Premium P0v3 with auto-scaling)"
       if [[ -z "$ENTRA_CLIENT_ID" ]]; then
         echo "  Authentication: Microsoft Entra ID (auto-configured)"
         echo ""
