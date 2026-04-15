@@ -59,8 +59,12 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
           value: '2025-05-01-preview'
         }
         {
-          name: 'NEXT_PUBLIC_SHOW_EJECT_BANNER'
-          value: 'true'
+          name: 'AZURE_SKU'
+          value: skuName
+        }
+        {
+          name: 'AZURE_ENTRA_CLIENT_ID'
+          value: entraClientId
         }
       ]
     }

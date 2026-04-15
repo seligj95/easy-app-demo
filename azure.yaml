@@ -2,6 +2,10 @@
 name: foundry-agent-appservice
 metadata:
   template: foundry-agent-appservice@0.0.1
+infra:
+  provider: bicep
+  path: infra
+  module: main
 services:
   web:
     project: .

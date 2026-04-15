@@ -15,10 +15,10 @@
       "value": "${AZURE_AI_AGENT_NAME}"
     },
     "skuName": {
-      "value": "${AZURE_APP_SKU=B1}"
+      "value": "${AZURE_SKU}"
     },
     "entraClientId": {
-      "value": "${AZURE_ENTRA_CLIENT_ID=}"
+      "value": "${AZURE_ENTRA_CLIENT_ID}"
     }
   }
 }
