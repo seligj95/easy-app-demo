@@ -8,7 +8,7 @@ interface EjectModalProps {
 }
 
 export function EjectModal({ open, onClose }: EjectModalProps) {
-  const [cloneCommand, setCloneCommand] = useState<string | null>(null);
+  const [forkCommand, setForkCommand] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState<"clone" | "azd" | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -22,7 +22,7 @@ export function EjectModal({ open, onClose }: EjectModalProps) {
       setLoading(true);
       fetch("/api/eject")
         .then((r) => r.json())
-        .then((data) => setCloneCommand(data.cloneCommand))
+        .then((data) => setForkCommand(data.forkCommand))
         .finally(() => setLoading(false));
     } else {
       dialog.close();
@@ -74,11 +74,21 @@ export function EjectModal({ open, onClose }: EjectModalProps) {
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
               1
             </span>
-            <h3 className="font-medium text-gray-900">Clone & Configure</h3>
+            <h3 className="font-medium text-gray-900">Fork & Configure</h3>
           </div>
           <p className="mb-3 ml-8 text-sm text-gray-600">
-            Run this command in your terminal. It clones the template and
-            pre-fills your Azure configuration.
+            Run this command in your terminal. It forks the template to your
+            GitHub account, clones it, and pre-fills your Azure configuration.
+            Requires the{" "}
+            <a
+              href="https://cli.github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-blue-600 underline"
+            >
+              GitHub CLI
+            </a>
+            .
           </p>
           <div className="relative ml-8">
             {loading ? (
@@ -88,11 +98,11 @@ export function EjectModal({ open, onClose }: EjectModalProps) {
             ) : (
               <>
                 <pre className="overflow-x-auto rounded-lg bg-gray-900 p-4 text-sm leading-relaxed text-green-400">
-                  {cloneCommand}
+                  {forkCommand}
                 </pre>
                 <button
                   onClick={() =>
-                    cloneCommand && copyToClipboard(cloneCommand, "clone")
+                    forkCommand && copyToClipboard(forkCommand, "clone")
                   }
                   className="absolute right-2 top-2 rounded-md bg-gray-700 px-2.5 py-1 text-xs font-medium text-gray-300 transition-colors hover:bg-gray-600"
                 >

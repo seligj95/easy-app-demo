@@ -3,6 +3,9 @@ import { NextResponse } from "next/server";
 const TEMPLATE_REPO =
   process.env.EJECT_TEMPLATE_REPO || "https://github.com/seligj95/easy-app-demo";
 
+// Extract "owner/repo" from full URL for gh CLI
+const TEMPLATE_SLUG = TEMPLATE_REPO.replace("https://github.com/", "");
+
 export async function GET() {
   // App Service auto-injects these env vars at runtime
   const appName = process.env.WEBSITE_SITE_NAME || "";
@@ -25,18 +28,19 @@ export async function GET() {
     `AZURE_ENTRA_CLIENT_ID=${entraClientId}`,
   ].join("\n");
 
-  const cloneCommand = [
-    `git clone ${TEMPLATE_REPO} my-agent-ui`,
-    `cd my-agent-ui`,
-    `mkdir -p .azure/dev`,
-    `cat > .azure/dev/.env << 'EOF'`,
+  const forkCommand = [
+    `gh repo fork ${TEMPLATE_SLUG} --clone -- my-agent-ui \\`,
+    `  && cd my-agent-ui \\`,
+    `  && mkdir -p .azure/dev \\`,
+    `  && cat > .azure/dev/.env << 'EOF'`,
     envFileContent,
     `EOF`,
-  ].join(" \\\n  && ");
+  ].join("\n");
 
   return NextResponse.json({
-    cloneCommand,
+    forkCommand,
     envFileContent,
     templateRepo: TEMPLATE_REPO,
+    templateSlug: TEMPLATE_SLUG,
   });
 }
