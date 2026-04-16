@@ -69,6 +69,10 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
           name: 'AZURE_ENTRA_CLIENT_ID'
           value: entraClientId
         }
+        {
+          name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
+          value: 'false'
+        }
       ]
     }
     httpsOnly: true

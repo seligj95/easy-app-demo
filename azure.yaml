@@ -11,4 +11,23 @@ services:
     project: .
     language: ts
     host: appservice
-    dist: .next/standalone
+hooks:
+  postprovision:
+    shell: sh
+    run: |
+      echo "Building the application..."
+      npm install --silent && npm run build
+      echo "Packaging for deployment..."
+      DEPLOY_DIR=$(mktemp -d)
+      cp -r .next/standalone/. "$DEPLOY_DIR/"
+      cp -r .next/static "$DEPLOY_DIR/.next/static"
+      cp -r public "$DEPLOY_DIR/public" 2>/dev/null || true
+      (cd "$DEPLOY_DIR" && zip -rq deploy.zip .)
+      echo "Deploying to App Service..."
+      az webapp deploy --resource-group "$AZURE_RESOURCE_GROUP" --name "$AZURE_APP_NAME" --src-path "$DEPLOY_DIR/deploy.zip" --type zip --output none
+      rm -rf "$DEPLOY_DIR"
+      echo "Deployment complete: https://${AZURE_APP_NAME}.azurewebsites.net"
+workflows:
+  up:
+    steps:
+      - azd: provision
