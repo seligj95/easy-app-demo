@@ -38,6 +38,7 @@ export async function GET() {
     `gh repo fork ${TEMPLATE_SLUG} --clone -- my-agent-ui \\`,
     `  && cd my-agent-ui \\`,
     `  && mkdir -p .azure/dev \\`,
+    `  && echo '{"version":1,"defaultEnvironment":"dev"}' > .azure/config.json \\`,
     `  && cat > .azure/dev/.env << 'EOF'`,
     envFileContent,
     `EOF`,
