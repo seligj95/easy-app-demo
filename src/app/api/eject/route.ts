@@ -12,6 +12,10 @@ export async function GET() {
   const resourceGroup = process.env.WEBSITE_RESOURCE_GROUP || "";
   const location = process.env.REGION_NAME || "";
 
+  // WEBSITE_OWNER_NAME format: "subscriptionId+rgName-regionwebspace"
+  const ownerName = process.env.WEBSITE_OWNER_NAME || "";
+  const subscriptionId = ownerName.split("+")[0] || "";
+
   // These are set via Bicep app settings
   const foundryEndpoint = process.env.AZURE_AI_PROJECT_ENDPOINT || "";
   const agentName = process.env.AZURE_AI_AGENT_NAME || "";
@@ -19,6 +23,8 @@ export async function GET() {
   const entraClientId = process.env.AZURE_ENTRA_CLIENT_ID || "";
 
   const envFileContent = [
+    `AZURE_ENV_NAME=dev`,
+    `AZURE_SUBSCRIPTION_ID=${subscriptionId}`,
     `AZURE_APP_NAME=${appName}`,
     `AZURE_RESOURCE_GROUP=${resourceGroup}`,
     `AZURE_LOCATION=${location}`,
